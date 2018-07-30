@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<form asp-controller="Home" asp-action="PostearDoc" enctype="multipart/form-data" id="frmDocumento">
+    <label>Ingrese el documento: </label>
+    <input type="file" name="file"/>
+    <button type="submit">Submit</button>
+</form>
+
+<p id="parrafoResult"></p>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            var $parrafo = $("#parrafoResult");
+            $parrafo.html('Aca vamos a mostrar el resultado');
+
+            $("#frmDocumento").submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData($(this)[0]);
+                var url = $(this).attr('action');
+
+                $.ajax({
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    url: url,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    success: function(data) {
+                        $parrafo.html(data.texto);
+                    },
+                    error: function() {
+                        $parrafo.html('Ocurrio un terrible error :(');
+                    }
+                });
+            });
+
+        });
+    </script>
+}
